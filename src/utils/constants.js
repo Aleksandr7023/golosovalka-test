@@ -1,2 +1,2 @@
 ﻿// src/utils/constants.js — версия тестировщика
-export const APP_VERSION = 'v1.8'
+export const APP_VERSION = 'v1.9'
