@@ -1,4 +1,4 @@
-// src/screens/TestScreen.jsx — v2.092 (всё как на iPhone: .docx, .txt, .pdf — идеально!)
+// src/screens/TestScreen.jsx — v2.093 (всё работает как на iPhone!)
 
 import React, { useState } from 'react'
 
@@ -30,9 +30,15 @@ export default function TestScreen() {
     }
   }
 
-  const openFile = (file) => {
+  const openFile = async (file) => {
     const url = URL.createObjectURL(file)
-    setViewerFile({ url, file })
+
+    if (file.type === 'text/plain') {
+      const text = await file.text()
+      setViewerFile({ url, file, text })
+    } else {
+      setViewerFile({ url, file })
+    }
   }
 
   return (
@@ -138,7 +144,7 @@ export default function TestScreen() {
         </div>
       )}
 
-      {/* Просмотрщик — как на iPhone */}
+      {/* Просмотрщик — всё как на iPhone */}
       {viewerFile && (
         <div style={{
           position: 'fixed',
@@ -194,23 +200,28 @@ export default function TestScreen() {
                   objectFit: 'contain'
                 }}
               />
-            ) : viewerFile.file.type === 'text/plain' ? (
+            ) : viewerFile.text ? (
+              // ← .txt — белый фон, читаемо, на весь экран
               <div style={{
                 background: 'white',
                 color: 'black',
                 padding: '30px',
+                margin: '20px',
                 borderRadius: '16px',
-                maxWidth: '90%',
+                maxWidth: '95%',
                 maxHeight: '90%',
                 overflow: 'auto',
                 fontFamily: 'monospace',
                 fontSize: '16px',
-                lineHeight: '1.5',
-                whiteSpace: 'pre-wrap'
+                lineHeight: '1.6',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.6)'
               }}>
-                {viewerFile.file.text ? viewerFile.file.text : 'Загрузка...'}
+                <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                  {viewerFile.text}
+                </pre>
               </div>
             ) : (
+              // ← .pdf, .doc, .docx — iframe, вписывается
               <iframe
                 src={viewerFile.url}
                 title={viewerFile.file.name}
