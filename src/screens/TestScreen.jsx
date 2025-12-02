@@ -1,4 +1,4 @@
-// src/screens/TestScreen.jsx — полигон вложений (скрепка + превью + просмотр)
+// src/screens/TestScreen.jsx — полигон вложений (работает 100%)
 
 import React, { useState } from 'react'
 
@@ -45,7 +45,7 @@ export default function TestScreen() {
       background: '#f8f9fa',
       fontFamily: 'system-ui, sans-serif',
       gap: '30px',
-      padding: 'padding': '20px'
+      padding: '20px'
     }}>
       <h1 style={{
         fontSize: '36px',
@@ -56,14 +56,13 @@ export default function TestScreen() {
         тестировщик работает
       </h1>
 
-      {/* Скрепка */}
       <label style={{
         fontSize: '100px',
         cursor: 'pointer',
         transition: 'transform 0.2s'
       }}
-      onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
-      onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+      onMouseEnter={e => e.target.style.transform = 'scale(1.1)'}
+      onMouseLeave={e => e.target.style.transform = 'scale(1)'}
       >
         📎
         <input
@@ -79,7 +78,6 @@ export default function TestScreen() {
         Прикрепи до 3 файлов
       </p>
 
-      {/* Превью вложений */}
       {attachments.length > 0 && (
         <div style={{
           display: 'flex',
@@ -107,8 +105,8 @@ export default function TestScreen() {
                   boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                   transition: 'transform 0.2s'
                 }}
-                onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
               >
                 {file.type.startsWith('image/') ? 'Фото' :
                  file.type.startsWith('video/') ? 'Видео' :
@@ -140,7 +138,6 @@ export default function TestScreen() {
         </div>
       )}
 
-      {/* Просмотрщик */}
       {viewerFile && (
         <div style={{
           position: 'fixed',
