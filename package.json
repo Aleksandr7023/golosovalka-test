@@ -1,5 +1,5 @@
 {
-"name": "golosovalka2",
+  "name": "golosovalka2",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^5",
+    "mammoth": "^1.11.0",
     "react": "^18",
     "react-dom": "^18",
-    "vite": "^7",
-    "@vitejs/plugin-react": "^5"
+    "vite": "^7"
   },
   "devDependencies": {}
 }
