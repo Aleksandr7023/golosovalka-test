@@ -1,4 +1,4 @@
-// src/screens/TestScreen.jsx — полигон вложений (работает 100%)
+// src/screens/TestScreen.jsx — v2.092 (всё как на iPhone: .docx, .txt, .pdf — идеально!)
 
 import React, { useState } from 'react'
 
@@ -68,7 +68,7 @@ export default function TestScreen() {
         <input
           type="file"
           multiple
-          accept="image/*,video/*,.pdf,.doc,.doc,.docx,.txt"
+          accept="image/*,video/*,.pdf,.doc,.docx,.txt"
           onChange={handleFiles}
           style={{ display: 'none' }}
         />
@@ -138,7 +138,7 @@ export default function TestScreen() {
         </div>
       )}
 
-      {/* Просмотрщик */}
+      {/* Просмотрщик — как на iPhone */}
       {viewerFile && (
         <div style={{
           position: 'fixed',
@@ -194,11 +194,32 @@ export default function TestScreen() {
                   objectFit: 'contain'
                 }}
               />
+            ) : viewerFile.file.type === 'text/plain' ? (
+              <div style={{
+                background: 'white',
+                color: 'black',
+                padding: '30px',
+                borderRadius: '16px',
+                maxWidth: '90%',
+                maxHeight: '90%',
+                overflow: 'auto',
+                fontFamily: 'monospace',
+                fontSize: '16px',
+                lineHeight: '1.5',
+                whiteSpace: 'pre-wrap'
+              }}>
+                {viewerFile.file.text ? viewerFile.file.text : 'Загрузка...'}
+              </div>
             ) : (
               <iframe
                 src={viewerFile.url}
                 title={viewerFile.file.name}
-                style={{ width: '100%', height: '100%', border: 'none' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                  borderRadius: '16px'
+                }}
                 sandbox="allow-scripts allow-same-origin"
               />
             )}
