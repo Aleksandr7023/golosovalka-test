@@ -82,37 +82,94 @@ export default function TestScreen() {
         </div>
       )}
 
-      {viewerFile && (
-        <div style={{ position: 'fixed', inset: 0, background: '#000', zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
-          <button onClick={() => { URL.revokeObjectURL(viewerFile.url); setViewerFile(null) }}
-            style={{ alignSelf: 'flex-end', background: 'none', border: 'none', color: 'white', fontSize: '40px', padding: '20px', cursor: 'pointer' }}>
-            ×
-          </button>
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-            {viewerFile.html ? (
-              <div style={{
-                background: 'white', color: 'black', padding: '30px', borderRadius: '16px',
-                maxWidth: '95%', maxHeight: '90%', overflow: 'auto', fontSize: '16px', lineHeight: '1.6'
-              }} dangerouslySetInnerHTML={{ __html: viewerFile.html }} />
-            ) : viewerFile.text ? (
-              <div style={{
-                background: 'white', color: 'black', padding: '30px', borderRadius: '16px',
-                maxWidth: '95%', maxHeight: '90%', overflow: 'auto', fontFamily: 'monospace', fontSize: '16px', lineHeight: '1.6'
-              }}>
-                <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{viewerFile.text}</pre>
-              </div>
-            ) : viewerFile.file.type.startsWith('image/') ? (
-              <img src={viewerFile.url} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-            ) : viewerFile.file.type.startsWith('video/') ? (
-              <video src={viewerFile.url} controls autoPlay style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-            ) : (
-              <iframe src={viewerFile.url} title={viewerFile.file.name}
-                style={{ width: '100%', height: '100%', border: 'none' }}
-                sandbox="allow-scripts allow-same-origin" />
-            )}
-          </div>
+{viewerFile && (
+  <div style={{
+    position: 'fixed',
+    inset: 0,
+    background: '#000',
+    zIndex: 1000,
+    display: 'flex',
+    flexDirection: 'column'
+  }}>
+    <button
+      onClick={() => {
+        URL.revokeObjectURL(viewerFile.url)
+        setViewerFile(null)
+      }}
+      style={{
+        alignSelf: 'flex-end',
+        background: 'none',
+        border: 'none',
+        color: 'white',
+        fontSize: '40px',
+        padding: '20px',
+        cursor: 'pointer'
+      }}
+    >
+      ×
+    </button>
+
+    <div style={{
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      overflow: 'hidden'
+    }}>
+      {viewerFile.html ? (
+        // ← .docx — как на iPhone: белый фон, весь экран, прокрутка
+        <div style={{
+          background: 'white',
+          color: 'black',
+          width: '100%',
+          height: '100%',
+          padding: '30px',
+          borderRadius: '16px',
+          overflowY: 'auto',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+          fontSize: '16px',
+          lineHeight: '1.6',
+          boxSizing: 'border-box'
+        }}
+        dangerouslySetInnerHTML={{ __html: viewerFile.html }}
+        />
+      ) : viewerFile.text ? (
+        <div style={{
+          background: 'white',
+          color: 'black',
+          width: '100%',
+          height: '100%',
+          padding: '30px',
+          borderRadius: '16px',
+          overflowY: 'auto',
+          fontFamily: 'monospace',
+          fontSize: '16px',
+          lineHeight: '1.6',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
+          boxSizing: 'border-box'
+        }}>
+          <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
+            {viewerFile.text}
+          </pre>
         </div>
+      ) : viewerFile.file.type.startsWith('image/') ? (
+        <img src={viewerFile.url} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+      ) : viewerFile.file.type.startsWith('video/') ? (
+        <video src={viewerFile.url} controls autoPlay style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+      ) : (
+        <iframe
+          src={viewerFile.url}
+          title={viewerFile.file.name}
+          style={{ width: '100%', height: '100%', border: 'none', borderRadius: '16px' }}
+          sandbox="allow-scripts allow-same-origin"
+        />
       )}
+    </div>
+  </div>
+)}
+
+
     </div>
   )
 }
