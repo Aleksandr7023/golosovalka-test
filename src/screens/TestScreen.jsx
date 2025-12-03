@@ -1,6 +1,7 @@
-// golosovalka_test/src/screens/TestScreen.jsx — все стили внутри, CSS можно удалить
+// src/screens/TestScreen.jsx — v2.096 — .docx работает, стили внутри
 
 import React, { useState } from 'react'
+import mammoth from 'mammoth'
 
 export default function TestScreen() {
   const [attachments, setAttachments] = useState([])
@@ -35,7 +36,7 @@ export default function TestScreen() {
         const result = await mammoth.convertToHtml({ arrayBuffer })
         setViewerFile({ url, file, html: result.value })
       } catch {
-        setViewerFile({ url, file, html: '<p>Не удалось прочитать</p>' })
+        setViewerFile({ url, file, html: '<p>Не удалось прочитать документ</p>' })
       }
     } else if (file.type === 'text/plain') {
       const text = await file.text()
@@ -119,7 +120,6 @@ export default function TestScreen() {
         </div>
       )}
 
-      {/* Просмотрщик — всё работает */}
       {viewerFile && (
         <div style={{
           position: 'fixed',
