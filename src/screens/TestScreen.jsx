@@ -1,7 +1,6 @@
-// src/screens/TestScreen.jsx — v2.094 (.docx открывается как текст!)
+// golosovalka_test/src/screens/TestScreen.jsx — все стили внутри, CSS можно удалить
 
 import React, { useState } from 'react'
-import mammoth from 'mammoth' // ← добавили
 
 export default function TestScreen() {
   const [attachments, setAttachments] = useState([])
@@ -22,7 +21,7 @@ export default function TestScreen() {
   const removeAttachment = (i) => {
     setAttachments(prev => prev.filter((_, idx) => idx !== i))
     if (viewerFile?.file === attachments[i]) {
-      if (viewerFile.url) URL.revokeObjectURL(viewerFile.url)
+      URL.revokeObjectURL(viewerFile.url)
       setViewerFile(null)
     }
   }
@@ -35,8 +34,8 @@ export default function TestScreen() {
         const arrayBuffer = await file.arrayBuffer()
         const result = await mammoth.convertToHtml({ arrayBuffer })
         setViewerFile({ url, file, html: result.value })
-      } catch (e) {
-        setViewerFile({ url, file, html: '<p>Не удалось прочитать документ</p>' })
+      } catch {
+        setViewerFile({ url, file, html: '<p>Не удалось прочитать</p>' })
       }
     } else if (file.type === 'text/plain') {
       const text = await file.text()
@@ -47,14 +46,30 @@ export default function TestScreen() {
   }
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#f8f9fa', fontFamily: 'system-ui, sans-serif', gap: '30px', padding: '20px' }}>
+    <div style={{
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#f8f9fa',
+      fontFamily: 'system-ui, sans-serif',
+      gap: '30px',
+      padding: '20px'
+    }}>
       <h1 style={{ fontSize: '36px', fontWeight: 'bold', color: '#333', margin: 0 }}>
         тестировщик работает
       </h1>
 
       <label style={{ fontSize: '100px', cursor: 'pointer' }}>
         📎
-        <input type="file" multiple accept="image/*,video/*,.pdf,.doc,.docx,.txt" onChange={handleFiles} style={{ display: 'none' }} />
+        <input
+          type="file"
+          multiple
+          accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+          onChange={handleFiles}
+          style={{ display: 'none' }}
+        />
       </label>
 
       <p style={{ fontSize: '18px', color: '#666' }}>Прикрепи до 3 файлов</p>
@@ -63,112 +78,119 @@ export default function TestScreen() {
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
           {attachments.map((file, i) => (
             <div key={i} style={{ position: 'relative' }}>
-              <div onClick={() => openFile(file)} style={{
-                width: '100px', height: '100px', background: '#ddd', borderRadius: '16px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', fontSize: '14px', textAlign: 'center', padding: '8px'
-              }}>
+              <div
+                onClick={() => openFile(file)}
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  background: '#ddd',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  textAlign: 'center',
+                  padding: '8px'
+                }}
+              >
                 {file.type.startsWith('image/') ? 'Фото' :
                  file.type.startsWith('video/') ? 'Видео' :
                  file.name.split('.').pop().toUpperCase()}
               </div>
-              <button onClick={(e) => { e.stopPropagation(); removeAttachment(i) }} style={{
-                position: 'absolute', top: '-10px', right: '-10px',
-                background: '#ff4d4d', color: 'white', border: 'none', borderRadius: '50%',
-                width: '30px', height: '30px', fontSize: '18px', cursor: 'pointer'
-              }}>×</button>
+              <button
+                onClick={(e) => { e.stopPropagation(); removeAttachment(i) }}
+                style={{
+                  position: 'absolute',
+                  top: '-10px',
+                  right: '-10px',
+                  background: '#ff4d4d',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '30px',
+                  height: '30px',
+                  fontSize: '18px',
+                  cursor: 'pointer'
+                }}
+              >×</button>
             </div>
           ))}
         </div>
       )}
 
-{viewerFile && (
-  <div style={{
-    position: 'fixed',
-    inset: 0,
-    background: '#000',
-    zIndex: 1000,
-    display: 'flex',
-    flexDirection: 'column'
-  }}>
-    <button
-      onClick={() => {
-        URL.revokeObjectURL(viewerFile.url)
-        setViewerFile(null)
-      }}
-      style={{
-        alignSelf: 'flex-end',
-        background: 'none',
-        border: 'none',
-        color: 'white',
-        fontSize: '40px',
-        padding: '20px',
-        cursor: 'pointer'
-      }}
-    >
-      ×
-    </button>
-
-    <div style={{
-      flex: 1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px',
-      overflow: 'hidden'
-    }}>
-      {viewerFile.html ? (
-        // ← .docx — как на iPhone: белый фон, весь экран, прокрутка
+      {/* Просмотрщик — всё работает */}
+      {viewerFile && (
         <div style={{
-          background: 'white',
-          color: 'black',
-          width: '100%',
-          height: '100%',
-          padding: '30px',
-          borderRadius: '16px',
-          overflowY: 'auto',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-          fontSize: '16px',
-          lineHeight: '1.6',
-          boxSizing: 'border-box'
-        }}
-        dangerouslySetInnerHTML={{ __html: viewerFile.html }}
-        />
-      ) : viewerFile.text ? (
-        <div style={{
-          background: 'white',
-          color: 'black',
-          width: '100%',
-          height: '100%',
-          padding: '30px',
-          borderRadius: '16px',
-          overflowY: 'auto',
-          fontFamily: 'monospace',
-          fontSize: '16px',
-          lineHeight: '1.6',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-          boxSizing: 'border-box'
+          position: 'fixed',
+          inset: 0,
+          background: '#000',
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column'
         }}>
-          <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
-            {viewerFile.text}
-          </pre>
-        </div>
-      ) : viewerFile.file.type.startsWith('image/') ? (
-        <img src={viewerFile.url} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-      ) : viewerFile.file.type.startsWith('video/') ? (
-        <video src={viewerFile.url} controls autoPlay style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
-      ) : (
-        <iframe
-          src={viewerFile.url}
-          title={viewerFile.file.name}
-          style={{ width: '100%', height: '100%', border: 'none', borderRadius: '16px' }}
-          sandbox="allow-scripts allow-same-origin"
-        />
-      )}
-    </div>
-  </div>
-)}
+          <button
+            onClick={() => {
+              URL.revokeObjectURL(viewerFile.url)
+              setViewerFile(null)
+            }}
+            style={{
+              alignSelf: 'flex-end',
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              fontSize: '40px',
+              padding: '20px',
+              cursor: 'pointer'
+            }}
+          >×</button>
 
+          <div style={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px'
+          }}>
+            {viewerFile.html ? (
+              <div style={{
+                background: 'white',
+                color: 'black',
+                padding: '30px',
+                borderRadius: '16px',
+                width: '95%',
+                height: '90%',
+                overflow: 'auto',
+                fontSize: '16px',
+                lineHeight: '1.6',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.6)'
+              }} dangerouslySetInnerHTML={{ __html: viewerFile.html }} />
+            ) : viewerFile.text ? (
+              <div style={{
+                background: 'white',
+                color: 'black',
+                padding: '30px',
+                borderRadius: '16px',
+                width: '95%',
+                height: '90%',
+                overflow: 'auto',
+                fontFamily: 'monospace',
+                fontSize: '16px',
+                lineHeight: '1.6',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.6)'
+              }}>
+                <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{viewerFile.text}</pre>
+              </div>
+            ) : viewerFile.file.type.startsWith('image/') ? (
+              <img src={viewerFile.url} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+            ) : viewerFile.file.type.startsWith('video/') ? (
+              <video src={viewerFile.url} controls autoPlay style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+            ) : (
+              <iframe src={viewerFile.url} title={viewerFile.file.name} style={{ width: '100%', height: '100%', border: 'none' }} />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
