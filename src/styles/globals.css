@@ -1,11 +1,17 @@
-/* src/styles/globals.css — глобальные стили */
+/* src/styles/globals.css — правильный reset 2025 года */
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
+}
+
+/* Сброс только у элементов, где он нужен */
+h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote {
   margin: 0;
   padding: 0;
+}
+
+ul, ol {
+  list-style: none;
 }
 
 html {
@@ -13,6 +19,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  overscroll-behavior: none;   /* ← только здесь — работает как надо */
 }
 
 body {
@@ -20,15 +27,9 @@ body {
   background: #f8f9fa;
   color: #333;
   line-height: 1.5;
-  overscroll-behavior: none;
 }
 
-/* Убираем стандартные отступы у списков */
-ul, ol {
-  list-style: none;
-}
-
-/* Убираем стандартные стили у кнопок и инпутов */
+/* Остальное — без изменений */
 button, input, textarea, select {
   font: inherit;
   color: inherit;
@@ -37,7 +38,6 @@ button, input, textarea, select {
   outline: none;
 }
 
-/* Фокус для доступности */
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
@@ -46,42 +46,9 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-/* Скрываем стрелки у input type="number" */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-/* Плавные переходы для интерактивных элементов */
-button, [role="button"], input[type="file"]::file-selector-button {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-/* Скроллбар (красивый) */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.2);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0,0,0,0.3);
-}
-
-/* Для мобильных — убираем выделение */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+/* Скроллбар и т.д. — оставляем */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+* { -webkit-tap-highlight-color: transparent; }
