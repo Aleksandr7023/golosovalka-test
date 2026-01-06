@@ -1,32 +1,10 @@
 // screens/TestMainScreen.jsx
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Карточка ${i + 1}` }));
 
 export default function TestMainScreen() {
   const navigate = useNavigate();
-
-  // Сохранение и восстановление скролла
-  useEffect(() => {
-    const savedScroll = localStorage.getItem('testScrollPosition');
-    if (savedScroll) {
-      window.scrollTo(0, parseInt(savedScroll, 10));
-    }
-
-    const saveScroll = () => {
-      localStorage.setItem('testScrollPosition', window.scrollY);
-    };
-
-    window.addEventListener('scroll', saveScroll);
-    window.addEventListener('beforeunload', saveScroll);
-
-    return () => {
-      window.removeEventListener('scroll', saveScroll);
-      window.removeEventListener('beforeunload', saveScroll);
-      saveScroll(); // сохраняем при уходе
-    };
-  }, []);
 
   const openDetail = (id) => {
     navigate(`/detail/${id}`);
@@ -47,11 +25,8 @@ export default function TestMainScreen() {
               boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
               cursor: 'pointer',
               textAlign: 'center',
-              fontSize: '18px',
-              transition: 'transform 0.2s'
+              fontSize: '18px'
             }}
-            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
             {card.title}
           </div>
