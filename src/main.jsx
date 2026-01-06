@@ -1,13 +1,10 @@
 // main.jsx
 import React from 'react';
-import { createRoot } from 'react-dom/client'; // ← правильный импорт (функция createRoot)
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.jsx';
+import { createRoot } from 'react-dom/client';
 
 createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+  <div style={{ padding: '40px', textAlign: 'center', fontSize: '24px' }}>
+    <h1>Привет! Главный экран загрузился!</h1>
+    <p>Если видишь это — рендер работает.</p>
+  </div>
 );
