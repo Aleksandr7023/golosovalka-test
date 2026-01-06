@@ -1,23 +1,19 @@
 // screens/TestMainScreen.jsx
 import { useNavigate } from 'react-router-dom';
 
-const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Карточка ${i + 1}` }));
+const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Опрос ${i + 1}: Тема опроса` }));
 
 export default function TestMainScreen() {
   const navigate = useNavigate();
 
-  const openDetail = (id) => {
-    navigate(`/detail/${id}`);
-  };
-
   return (
     <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Тест скролла — 50 карточек</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Список опросов (пролистай вниз)</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         {cards.map(card => (
           <div
             key={card.id}
-            onClick={() => openDetail(card.id)}
+            onClick={() => navigate(`/poll/${card.id}`)}
             style={{
               padding: '20px',
               background: 'white',
