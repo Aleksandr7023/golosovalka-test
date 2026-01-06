@@ -1,5 +1,5 @@
 // screens/TestMainScreen.jsx
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Карточка ${i + 1}` }));
@@ -9,22 +9,22 @@ export default function TestMainScreen() {
 
   // Сохранение и восстановление скролла
   useEffect(() => {
-    const savedScroll = localStorage.getItem('testScroll');
+    const savedScroll = localStorage.getItem('testScrollPosition');
     if (savedScroll) {
       window.scrollTo(0, parseInt(savedScroll, 10));
     }
 
-    const handleScroll = () => {
-      localStorage.setItem('testScroll', window.scrollY);
+    const saveScroll = () => {
+      localStorage.setItem('testScrollPosition', window.scrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('beforeunload', handleScroll);
+    window.addEventListener('scroll', saveScroll);
+    window.addEventListener('beforeunload', saveScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('beforeunload', handleScroll);
-      handleScroll(); // сохраняем при уходе
+      window.removeEventListener('scroll', saveScroll);
+      window.removeEventListener('beforeunload', saveScroll);
+      saveScroll(); // сохраняем при уходе
     };
   }, []);
 
@@ -34,7 +34,7 @@ export default function TestMainScreen() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Тест скролла (50 карточек)</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Тест скролла — 50 карточек</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         {cards.map(card => (
           <div
@@ -47,8 +47,11 @@ export default function TestMainScreen() {
               boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
               cursor: 'pointer',
               textAlign: 'center',
-              fontSize: '18px'
+              fontSize: '18px',
+              transition: 'transform 0.2s'
             }}
+            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
           >
             {card.title}
           </div>
