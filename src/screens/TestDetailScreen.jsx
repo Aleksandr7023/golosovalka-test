@@ -1,16 +1,15 @@
 // screens/TestDetailScreen.jsx
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-export default function TestDetailScreen() {
+export default function TestDetailScreen({ onBack }) {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   return (
     <div style={{ padding: '40px', textAlign: 'center' }}>
       <h1>Детали карточки #{id}</h1>
-      <p>Это тестовый экран для проверки сохранения скролла при возврате.</p>
+      <p>Это тестовый экран для проверки сохранения скролла.</p>
       <button
-        onClick={() => navigate('/')}
+        onClick={onBack}
         style={{
           padding: '15px 30px',
           background: '#2ea44f',
