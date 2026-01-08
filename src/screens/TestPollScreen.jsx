@@ -8,7 +8,7 @@ export default function TestPollScreen() {
   return (
     <div style={{ padding: '40px', textAlign: 'center' }}>
       <h1>Опрос #{id}</h1>
-      <p>Это тестовый экран опроса для проверки сохранения скролла при возврате.</p>
+      <p>Это тестовый экран опроса.</p>
       <button
         onClick={() => navigate('/')}
         style={{

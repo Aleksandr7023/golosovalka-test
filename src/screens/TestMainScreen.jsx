@@ -1,14 +1,14 @@
 // screens/TestMainScreen.jsx
 import { useNavigate } from 'react-router-dom';
 
-const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Опрос ${i + 1}: Тема опроса` }));
+const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Опрос ${i + 1}` }));
 
 export default function TestMainScreen() {
   const navigate = useNavigate();
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Список опросов (пролистай вниз)</h1>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Список опросов (50 штук)</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         {cards.map(card => (
           <div
