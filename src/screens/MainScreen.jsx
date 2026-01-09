@@ -2,13 +2,10 @@
 import { useState, useEffect, useRef } from 'react';
 import PollCard from '../components/PollCard.jsx';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
-import { fetchPolls, createPoll } from '../utils/api.js';
-import { useContext } from 'react';
-import { UserContext } from '../App.jsx';
+import { fetchPolls } from '../utils/api.js';
 import '../styles/mainScreen.css';
 
 export default function MainScreen() {
-  const { telegramId } = useContext(UserContext);
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -58,23 +55,6 @@ export default function MainScreen() {
     return () => observer.disconnect();
   }, [loading, hasMore, sentinel.current]);
 
-  const handleNewPoll = async () => {
-    const title = prompt('Тема опроса');
-    if (!title) return;
-    const question = prompt('Вопрос');
-    if (!question) return;
-    const options = prompt('Варианты (по одному на строку)', 'Да\nНет\nНе знаю');
-    if (!options) return;
-
-    try {
-      await createPoll({ title, question, options, telegramId });
-      alert('Опрос успешно создан как черновик!\nОжидайте одобрения и публикации.');
-      loadPolls(1, false);
-    } catch (e) {
-      alert('Ошибка создания опроса');
-    }
-  };
-
   if (loading && polls.length === 0) return <LoadingSpinner />;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
@@ -82,9 +62,6 @@ export default function MainScreen() {
     <div className="main-screen">
       <header>
         <h1>Опросы</h1>
-        <button className="new-poll-btn" onClick={handleNewPoll}>
-          + Новый
-        </button>
       </header>
 
       <section className="poll-list">
