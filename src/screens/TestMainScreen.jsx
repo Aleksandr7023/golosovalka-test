@@ -1,4 +1,3 @@
-// screens/TestMainScreen.jsx
 import { useNavigate } from 'react-router-dom';
 
 const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Карточка ${i + 1}` }));

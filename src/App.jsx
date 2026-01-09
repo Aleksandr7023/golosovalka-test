@@ -1,4 +1,3 @@
-// App.jsx
 import { Routes, Route, ScrollRestoration } from 'react-router-dom';
 import TestMainScreen from './screens/TestMainScreen.jsx';
 import TestDetailScreen from './screens/TestDetailScreen.jsx';

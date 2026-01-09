@@ -1,4 +1,3 @@
-// screens/TestDetailScreen.jsx
 import { useParams, useNavigate } from 'react-router-dom';
 
 export default function TestDetailScreen() {
