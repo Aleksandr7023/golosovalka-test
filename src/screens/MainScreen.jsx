@@ -1,104 +1,42 @@
 // MainScreen.jsx
-import { useState, useEffect, useRef } from 'react';
-import PollCard from '../components/PollCard.jsx';
-import LoadingSpinner from '../components/LoadingSpinner.jsx';
-import { fetchPolls, createPoll } from '../utils/api.js';
-import { useContext } from 'react';
-import { UserContext } from '../App.jsx';
-import NewPollModal from '../components/NewPollModal.jsx'; // ← новый модальный компонент
-import '../styles/mainScreen.css';
+import { useNavigate } from 'react-router-dom';
+
+const polls = Array.from({ length: 50 }, (_, i) => ({ 
+  id: i + 1, 
+  title: `Опрос ${i + 1}`, 
+  question: 'Вопрос опроса?', 
+  views_count: Math.floor(Math.random() * 100), 
+  votes: [Math.floor(Math.random() * 20), Math.floor(Math.random() * 20), Math.floor(Math.random() * 20)]
+}));
 
 export default function MainScreen() {
-  const { telegramId } = useContext(UserContext);
-  const [polls, setPolls] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [showNewPollModal, setShowNewPollModal] = useState(false);
-  const sentinel = useRef(null);
-
-  const loadPolls = async (pageNum = 1, append = false) => {
-    setLoading(true);
-    try {
-      const data = await fetchPolls(pageNum);
-      if (append) {
-        setPolls(prev => [...prev, ...data]);
-      } else {
-        setPolls(data);
-      }
-      setHasMore(data.length === 20);
-    } catch (e) {
-      setError('Не удалось загрузить опросы');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadPolls(1, false);
-  }, []);
-
-  useEffect(() => {
-    if (page > 1) loadPolls(page, true);
-  }, [page]);
-
-  useEffect(() => {
-    if (!sentinel.current || loading || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting) {
-          setPage(prev => prev + 1);
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    observer.observe(sentinel.current);
-
-    return () => observer.disconnect();
-  }, [loading, hasMore, sentinel.current]);
-
-  const handleOpenNewPoll = () => {
-    setShowNewPollModal(true);
-  };
-
-  const handleSaveNewPoll = async ({ title, question, options }) => {
-    try {
-      await createPoll({ title, question, options, telegramId });
-      alert('Опрос успешно создан как черновик!\nОжидайте одобрения и публикации.');
-      loadPolls(1, false);
-    } catch (e) {
-      alert('Ошибка создания опроса');
-    }
-    setShowNewPollModal(false);
-  };
-
-  if (loading && polls.length === 0) return <LoadingSpinner />;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  const navigate = useNavigate();
 
   return (
-    <div className="main-screen">
-      <header>
-        <h1>Опросы</h1>
-        <button className="new-poll-btn" onClick={handleOpenNewPoll}>
-          + Новый
-        </button>
-      </header>
-
-      {showNewPollModal && (
-        <NewPollModal 
-          onClose={() => setShowNewPollModal(false)}
-          onSave={handleSaveNewPoll}
-        />
-      )}
-
-      <section className="poll-list">
-        {polls.map(poll => <PollCard key={poll.id} poll={poll} />)}
-        {hasMore && <div ref={sentinel} style={{ height: 100 }} />}
-        {loading && polls.length > 0 && <p>Загрузка...</p>}
-      </section>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Опросы</h1>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        {polls.map(poll => (
+          <div
+            key={poll.id}
+            onClick={() => navigate(`/poll/${poll.id}`)}
+            style={{
+              padding: '20px',
+              background: 'white',
+              borderRadius: '12px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              cursor: 'pointer'
+            }}
+          >
+            <h3>{poll.title}</h3>
+            <p>{poll.question}</p>
+            <div style={{ fontSize: '14px', color: '#666' }}>
+              <span>{poll.views_count} просмотров</span>
+              <span style={{ marginLeft: '20px' }}>{poll.votes.reduce((a, b) => a + b, 0)} голосов</span>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
