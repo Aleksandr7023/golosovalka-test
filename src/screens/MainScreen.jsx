@@ -5,7 +5,6 @@ import LoadingSpinner from '../components/LoadingSpinner.jsx';
 import { fetchPolls, createPoll } from '../utils/api.js';
 import { useContext } from 'react';
 import { UserContext } from '../App.jsx';
-import NewPollModal from '../components/NewPollModal.jsx'; // ← новый модальный компонент
 import '../styles/mainScreen.css';
 
 export default function MainScreen() {
@@ -15,7 +14,6 @@ export default function MainScreen() {
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [showNewPollModal, setShowNewPollModal] = useState(false);
   const sentinel = useRef(null);
 
   const loadPolls = async (pageNum = 1, append = false) => {
@@ -60,11 +58,14 @@ export default function MainScreen() {
     return () => observer.disconnect();
   }, [loading, hasMore, sentinel.current]);
 
-  const handleOpenNewPoll = () => {
-    setShowNewPollModal(true);
-  };
+  const handleNewPoll = async () => {
+    const title = prompt('Тема опроса');
+    if (!title) return;
+    const question = prompt('Вопрос');
+    if (!question) return;
+    const options = prompt('Варианты (по одному на строку)', 'Да\nНет\nНе знаю');
+    if (!options) return;
 
-  const handleSaveNewPoll = async ({ title, question, options }) => {
     try {
       await createPoll({ title, question, options, telegramId });
       alert('Опрос успешно создан как черновик!\nОжидайте одобрения и публикации.');
@@ -72,7 +73,6 @@ export default function MainScreen() {
     } catch (e) {
       alert('Ошибка создания опроса');
     }
-    setShowNewPollModal(false);
   };
 
   if (loading && polls.length === 0) return <LoadingSpinner />;
@@ -82,17 +82,10 @@ export default function MainScreen() {
     <div className="main-screen">
       <header>
         <h1>Опросы</h1>
-        <button className="new-poll-btn" onClick={handleOpenNewPoll}>
+        <button className="new-poll-btn" onClick={handleNewPoll}>
           + Новый
         </button>
       </header>
-
-      {showNewPollModal && (
-        <NewPollModal 
-          onClose={() => setShowNewPollModal(false)}
-          onSave={handleSaveNewPoll}
-        />
-      )}
 
       <section className="poll-list">
         {polls.map(poll => <PollCard key={poll.id} poll={poll} />)}

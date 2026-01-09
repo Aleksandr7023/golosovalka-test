@@ -1,6 +1,6 @@
 // App.jsx
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, ScrollRestoration } from 'react-router-dom';
 import MainScreen from './screens/MainScreen.jsx';
 import PollScreen from './screens/PollScreen.jsx';
 import CommentScreen from './screens/CommentScreen.jsx';
@@ -213,6 +213,7 @@ export default function App() {
             <Route path="/comment/:id" element={<CommentScreen />} />
             <Route path="/profile" element={<ProfileScreen />} />
           </Routes>
+          <ScrollRestoration />
         </main>
       </div>
     </UserContext.Provider>
