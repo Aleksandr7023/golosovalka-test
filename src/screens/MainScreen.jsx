@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import PollCard from '../components/PollCard.jsx';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
 import { fetchPolls } from '../utils/api.js';
-import '../styles/mainScreen.css';
 
 export default function MainScreen() {
   const [polls, setPolls] = useState([]);
@@ -59,16 +58,14 @@ export default function MainScreen() {
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
   return (
-    <div className="main-screen">
-      <header>
-        <h1>Опросы</h1>
-      </header>
+    <div>
+      <h1>Опросы</h1>
 
-      <section className="poll-list">
+      <div>
         {polls.map(poll => <PollCard key={poll.id} poll={poll} />)}
         {hasMore && <div ref={sentinel} style={{ height: 100 }} />}
         {loading && polls.length > 0 && <p>Загрузка...</p>}
-      </section>
+      </div>
     </div>
   );
 }
