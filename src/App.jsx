@@ -1,12 +1,14 @@
 // App.jsx
 import { Routes, Route, ScrollRestoration } from 'react-router-dom';
-import MainScreen from './screens/MainScreen.jsx';
+import TestMainScreen from './screens/TestMainScreen.jsx';
+import TestDetailScreen from './screens/TestDetailScreen.jsx';
 
 export default function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<MainScreen />} />
+        <Route path="/" element={<TestMainScreen />} />
+        <Route path="/detail/:id" element={<TestDetailScreen />} />
       </Routes>
       <ScrollRestoration />
     </>
