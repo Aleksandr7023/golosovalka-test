@@ -1,91 +1,20 @@
 // App.jsx
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation, ScrollRestoration } from 'react-router-dom'; // ← добавлен ScrollRestoration
+import React, { useState } from 'react';
+import { Routes, Route, useNavigate, useLocation, ScrollRestoration } from 'react-router-dom';
 import MainScreen from './screens/MainScreen.jsx';
 import PollScreen from './screens/PollScreen.jsx';
 import CommentScreen from './screens/CommentScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
 import { APP_VERSION } from './utils/constants.js';
 
-// Контекст для передачи telegramId и telegramUsername
-export const UserContext = React.createContext({ telegramId: null, telegramUsername: '' });
+// Контекст (пустой — ID и username убраны)
+export const UserContext = React.createContext({});
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
-  const [telegramId, setTelegramId] = useState(null);
-  const [telegramUsername, setTelegramUsername] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Определение Telegram ID и Username
-  useEffect(() => {
-    let id = null;
-    let username = '';
-
-    if (window.Telegram?.WebApp?.initDataUnsafe?.user) {
-      const user = window.Telegram.WebApp.initDataUnsafe.user;
-      id = user.id;
-      username = user.username || '';
-    }
-
-    if (!id && window.location.hash) {
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      const webAppData = params.get('tgWebAppData');
-      if (webAppData) {
-        try {
-          const webParams = new URLSearchParams(webAppData);
-          const userEncoded = webParams.get('user');
-          if (userEncoded) {
-            const userJson = decodeURIComponent(userEncoded);
-            const user = JSON.parse(userJson);
-            id = user.id;
-            username = user.username || '';
-          }
-        } catch (e) {
-          console.error('Ошибка парсинга tgWebAppData', e);
-        }
-      }
-    }
-
-    if (!id) {
-      const stored = localStorage.getItem('user_auth');
-      if (stored) {
-        try {
-          const userData = JSON.parse(stored);
-          id = userData.id;
-          username = userData.username || '';
-        } catch (e) {}
-      }
-    }
-
-    if (!id && (location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
-      id = 9999;
-      username = 'test_user';
-    }
-
-    if (id) {
-      localStorage.setItem('app_telegram_id', id);
-    }
-    if (username) {
-      localStorage.setItem('app_telegram_username', username);
-    }
-
-    setTelegramId(id);
-    setTelegramUsername(username);
-  }, []);
-
-  useEffect(() => {
-    if (telegramId === null) {
-      const savedId = localStorage.getItem('app_telegram_id');
-      if (savedId) setTelegramId(savedId);
-    }
-    if (telegramUsername === '') {
-      const savedUsername = localStorage.getItem('app_telegram_username');
-      if (savedUsername) setTelegramUsername(savedUsername);
-    }
-  }, [telegramId, telegramUsername]);
 
   const isMainScreen = location.pathname === '/';
   const isPollScreen = location.pathname.startsWith('/poll/');
@@ -99,9 +28,23 @@ export default function App() {
   };
 
   return (
-    <UserContext.Provider value={{ telegramId, telegramUsername }}>
+    <UserContext.Provider value={{}}>
       <div className="app">
-        <header style={{ padding: '20px', background: 'white', boxShadow: '0 2px 8px rgba(0,0,0,.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* Фиксированная шапка */}
+        <header style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '80px',
+          padding: '20px',
+          background: 'white',
+          boxShadow: '0 2px 8px rgba(0,0,0,.1)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          zIndex: 99
+        }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {!isMainScreen && (
               <button
@@ -121,9 +64,10 @@ export default function App() {
           </button>
         </header>
 
+        {/* Меню */}
         {menuOpen && (
           <div style={{
-            position: 'absolute',
+            position: 'fixed',
             right: '20px',
             top: '80px',
             background: 'white',
@@ -131,9 +75,7 @@ export default function App() {
             borderRadius: '8px',
             padding: '10px',
             boxShadow: '0 4px 12px rgba(0,0,0,.1)',
-            zIndex: 10,
-            minWidth: '180px',
-            width: '180px'
+            zIndex: 101
           }}>
             <button 
               onClick={() => {
@@ -165,6 +107,7 @@ export default function App() {
           </div>
         )}
 
+        {/* Модалка помощи */}
         {showHelpModal && (
           <div style={{
             position: 'fixed',
@@ -206,7 +149,12 @@ export default function App() {
           </div>
         )}
 
-        <main>
+        {/* Контент со скроллом */}
+        <main style={{
+          height: '100vh',
+          overflowY: 'auto',
+          paddingTop: '80px'
+        }}>
           <Routes>
             <Route path="/" element={<MainScreen />} />
             <Route path="/poll/:id" element={<PollScreen />} />
