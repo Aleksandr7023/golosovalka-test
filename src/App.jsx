@@ -1,6 +1,6 @@
 // App.jsx
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation, ScrollRestoration } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, ScrollRestoration } from 'react-router-dom'; // ← добавлен ScrollRestoration
 import MainScreen from './screens/MainScreen.jsx';
 import PollScreen from './screens/PollScreen.jsx';
 import CommentScreen from './screens/CommentScreen.jsx';
@@ -92,9 +92,9 @@ export default function App() {
 
   const handleBack = () => {
     if (isPollScreen) {
-      navigate('/'); // ← с PollScreen всегда на главную
+      navigate('/');
     } else {
-      navigate(-1); // ← на других экранах — по истории
+      navigate(-1);
     }
   };
 
