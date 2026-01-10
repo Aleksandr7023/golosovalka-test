@@ -1,9 +1,24 @@
+// screens/TestMainScreen.jsx
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const cards = Array.from({ length: 50 }, (_, i) => ({ id: i + 1, title: `Карточка ${i + 1}` }));
 
-export default function TestMainScreen() {
+export default function TestMainScreen({ scrollPosition, setScrollPosition }) {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, scrollPosition);
+  }, [scrollPosition]);
+
+  const saveScroll = () => {
+    setScrollPosition(window.scrollY);
+  };
+
+  const openDetail = (id) => {
+    saveScroll();
+    navigate(`/detail/${id}`);
+  };
 
   return (
     <div style={{ padding: '20px' }}>
@@ -12,7 +27,7 @@ export default function TestMainScreen() {
         {cards.map(card => (
           <div
             key={card.id}
-            onClick={() => navigate(`/detail/${card.id}`)}
+            onClick={() => openDetail(card.id)}
             style={{
               padding: '20px',
               background: 'white',

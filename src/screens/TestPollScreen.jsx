@@ -1,15 +1,16 @@
-// screens/TestDetailScreen.jsx
-import { useParams } from 'react-router-dom';
+// screens/TestPollScreen.jsx
+import { useParams, useNavigate } from 'react-router-dom';
 
-export default function TestDetailScreen({ onBack }) {
+export default function TestPollScreen() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <div style={{ padding: '40px', textAlign: 'center' }}>
-      <h1>Детали карточки #{id}</h1>
-      <p>Это тестовый экран для проверки сохранения скролла.</p>
+      <h1>Опрос #{id}</h1>
+      <p>Это тестовый экран опроса.</p>
       <button
-        onClick={onBack}
+        onClick={() => navigate('/')}
         style={{
           padding: '15px 30px',
           background: '#2ea44f',
@@ -20,7 +21,7 @@ export default function TestDetailScreen({ onBack }) {
           marginTop: '30px'
         }}
       >
-        Назад на список
+        Назад к списку
       </button>
     </div>
   );
